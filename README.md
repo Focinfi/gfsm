@@ -21,7 +21,7 @@ If you are designing a Order struct
   )
 
   // create a new StateMachine
-  var OrderStateMachine = NewStateMachine()
+  var OrderStateMachine = gfsm.NewStateMachine()
 
   // add a pay event for OrderStateMachine
   OrderStateMachine.AddEvent("pay").AddTransition(orderPaid, orderPending)
@@ -34,7 +34,7 @@ If you are designing a Order struct
   }
 
   // create new object with OrderStateMachine
-  var order = &Order{Name: "order", State: NewState(orderPending, OrderStateMachine)}
+  var order = &Order{Name: "order", State: gfsm.NewState(orderPending, OrderStateMachine)}
 
   // get the current state
   order.CurrentState() // "pending"
