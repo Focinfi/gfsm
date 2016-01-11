@@ -21,9 +21,10 @@ If you are designing a Order struct
   )
 
   // create a new StateMachine
-  var OrderStateMachine = gfsm.NewStateMachine()
+  var OrderStateMachine = gfsm.NewStateMachine(orderPending, orderPaid, orderShipped)
 
   // add a pay event for OrderStateMachine
+  // can only add state among in orderPending, orderPaid, orderShipped, or will return error
   OrderStateMachine.AddEvent("pay").AddTransition(orderPaid, orderPending)
   OrderStateMachine.AddEvent("ship").AddTransition(orderShipped, orderPaid)
 

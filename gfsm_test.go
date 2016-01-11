@@ -10,7 +10,7 @@ const (
 	orderShipped = "shipped"
 )
 
-var stateMachine = NewStateMachine()
+var stateMachine = NewStateMachine(orderPending, orderPaid, orderShipped)
 
 type Order struct {
 	name string
@@ -26,18 +26,27 @@ func TestNewState(t *testing.T) {
 	}
 }
 
-func TestAddEvent(t *testing.T) {
-	stateMachine.AddEvent("pay")
+func TestEvent(t *testing.T) {
+	stateMachine.Event("pay")
 	if _, ok := stateMachine.events["pay"]; !ok {
 		t.Error("can not add pay")
 	}
 }
 
-func TestAddTransition(t *testing.T) {
-	stateMachine.AddEvent("pay").AddTransition(orderPaid, orderPending)
+func TestTransition(t *testing.T) {
+	stateMachine.Event("pay").Transition(orderPaid, orderPending)
 	event := stateMachine.events["pay"]
 	if event.to != orderPaid || event.froms[0] != orderPending {
 		t.Errorf("can not add a cerrect transition, current is: to %s, from %v", event.to, event.froms)
+	}
+}
+
+func TestTransitionWithUnsupportState(t *testing.T) {
+	err := stateMachine.Event("pay").Transition(orderPaid, "unknown state")
+	if err == nil {
+		t.Error("can not stop adding transition with unsupportted state")
+	} else {
+		t.Log(err)
 	}
 }
 
